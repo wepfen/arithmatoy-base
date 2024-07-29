@@ -116,15 +116,14 @@ char *arithmatoy_sub(unsigned int base, const char *lhs, const char *rhs) {
 	
 	//printf("reverse lhs : %s\n", rev_lhs);
 	//printf("reverse rhs : %s\n", rev_rhs);
-	
-	printf("my_lhs %s\nmy_rhs %s\n", my_lhs, my_rhs);
 
 	if (len_lhs > len_rhs) {
 		max_len = len_lhs;
 		result = malloc(len_lhs+2); // 2 for '\0' and for a probable sign idk
-	} else if (my_lhs == my_rhs == "0"){
-
+	} else if ((strcmp(rhs,lhs) == strcmp("0", rhs)) && (strlen(lhs) == strlen(rhs) == 1)){
+		
 		return "0";
+		
 
 	} else if (len_rhs > len_lhs) {
 		//max_len = len_rhs;
