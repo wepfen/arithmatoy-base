@@ -19,22 +19,25 @@ char *arithmatoy_add(unsigned int base, const char *lhs, const char *rhs) {
 	//TODO gérer pour le cas verbose
 	char *result;
 
-	int len_lhs = strlen(drop_leading_zeros(lhs));
-	int len_rhs = strlen(drop_leading_zeros(rhs));
+	lhs = drop_leading_zeros(lhs);
+	rhs = drop_leading_zeros(rhs);
+
+	int len_lhs = strlen(lhs);
+	int len_rhs = strlen(rhs);
 	
 	int max_value = base;
 	int max_len = 0;
 	int carry = 0;
-	char *my_lhs = malloc(len_lhs); my_lhs = memcpy(my_lhs, drop_leading_zeros(lhs), len_lhs);
-	char *my_rhs = malloc(len_rhs); my_rhs = memcpy(my_rhs, drop_leading_zeros(rhs), len_rhs);
+	char *my_lhs = strdup(lhs);
+	char *my_rhs = strdup(rhs);
 	char *rev_rhs = reverse(my_rhs);
 	char *rev_lhs = reverse(my_lhs);
 	int tmp = 0;
 
 	if (VERBOSE) {
-		fprintf(stderr, "add: entering function\n");
-		fprintf(stderr, "add %s %s\n", lhs, rhs);
+		fprintf(stderr, "add %s %s --verbose\n", lhs, rhs);
 		fprintf(stderr, "%s + %s\n", lhs, rhs);
+		fprintf(stderr, "add: entering function\n");
 	}
 
 	max_len = get_max_len(len_lhs, len_rhs);	
@@ -45,7 +48,7 @@ char *arithmatoy_add(unsigned int base, const char *lhs, const char *rhs) {
 	    tmp = 0;
 
 		if (VERBOSE){
-			fprintf(stderr, "add: digit %c digit %c carry %d\n",  (len_lhs>counter ?rev_lhs[counter] : 0),  (len_rhs>counter ?rev_rhs[counter] : 0), carry);
+			fprintf(stderr, "add: digit %c digit %c carry %d\n",  (len_lhs>counter ?rev_lhs[counter] : '0'),  (len_rhs>counter ?rev_rhs[counter] : '0'), carry);
 		}
 
 		if (len_lhs>counter)
@@ -90,6 +93,8 @@ char *arithmatoy_add(unsigned int base, const char *lhs, const char *rhs) {
 char *arithmatoy_sub(unsigned int base, const char *lhs, const char *rhs) {
 	
 	if (VERBOSE) {
+		fprintf(stderr, "sub %s %s --verbose\n", lhs, rhs);
+		fprintf(stderr, "%s - %s\n", lhs, rhs);
 		fprintf(stderr, "sub: entering function\n");
 	}
 	
@@ -97,33 +102,42 @@ char *arithmatoy_sub(unsigned int base, const char *lhs, const char *rhs) {
   	// You should allocate a new char* large enough to store the result as a
   	// string Implement the algorithm Return the result
 	char *result;
-	int len_lhs = strlen(drop_leading_zeros(lhs));
-	int len_rhs = strlen(drop_leading_zeros(rhs));
+	lhs = drop_leading_zeros(lhs);
+	rhs = drop_leading_zeros(rhs);
+	int len_lhs = strlen(lhs);
+	int len_rhs = strlen(rhs);
+
 	int max_value = base;
 	int max_len = 0;
 	int carry = 0;
-	char *my_lhs = malloc(len_lhs); my_lhs = memcpy(my_lhs, drop_leading_zeros(lhs), len_lhs); 
-	char *my_rhs = malloc(len_rhs); my_rhs = memcpy(my_rhs, drop_leading_zeros(rhs), len_rhs);
+	char *my_lhs = strdup(lhs);
+	char *my_rhs = strdup(rhs);
 	char *rev_rhs = reverse(my_rhs);
 	char *rev_lhs = reverse(my_lhs);
 	int tmp = 0;
+	
+	//printf("lhs character : %s, rhs character : %s\n", lhs, rhs);
+	//printf("strlen lhs : %d\n", strlen(lhs));
 
-	
-	// allouer pour le résultat, la plus grande valeur des deux
-	
-	//printf("len_rhs : %d\n", len_rhs);
-	//printf("len_lhs : %d\n", len_lhs);
-	
-	//printf("reverse lhs : %s\n", rev_lhs);
-	//printf("reverse rhs : %s\n", rev_rhs);
+	// if maudit
+	if (strlen(lhs) == strlen(rhs)) {
 
-	// check si on a 0 - 0
-	if ((strcmp(rhs,lhs) == strcmp("0", rhs)) && (strlen(lhs) == strlen(rhs) == 1)){
-		
-		return "0";
-	
+		// check si rhs > lhs lorsque leur longueur est égale
+		if(get_digit_value(lhs[0])<get_digit_value(rhs[0])){
+			return NULL;
+
+		} else if (strlen(lhs)!=1){
+		// pour le cas lhs == rhs == 0
+		} else if (strlen(lhs) == 1){
+			if (strcmp("0", rhs) == strcmp("0", lhs)){
+				printf("ca passe la jsp pq\n");
+				return "0";
+			}
+		}
+	}
 	// si lhs est plus grand ou égal, alloue de l'espace mémoire
-	} else if (len_lhs >= len_rhs) {
+	
+	if (len_lhs >= len_rhs) {
 		max_len = len_lhs;
 		result = malloc(len_lhs+2); // 2 for '\0' and for a probable sign idk
 		
@@ -133,20 +147,15 @@ char *arithmatoy_sub(unsigned int base, const char *lhs, const char *rhs) {
 		return NULL;
 	}
 
-	// check si rhs > lhs lorsque leur longueur est égale
-	if (strlen(lhs) == strlen(rhs)) {
-
-		if(get_digit_value(lhs[0])<get_digit_value(rhs[0]))
-			return NULL;
-
-	}
-		
+	
+	
+	
 	for (int counter = 0; counter < max_len; counter++ )
 	{
 	    tmp = 0;
 
 		if (VERBOSE){
-			fprintf(stderr, "sub: digit %c digit %c carry %d\n",  (len_lhs>counter ?rev_lhs[counter] : 0),  (len_rhs>counter ?rev_rhs[counter] : 0), carry);
+			fprintf(stderr, "sub: digit %c digit %c carry %d\n",  (len_lhs>counter ?rev_lhs[counter] : '0'),  (len_rhs>counter ?rev_rhs[counter] : '0'), carry);
 		}
 
 		if (len_lhs>counter)
@@ -182,6 +191,7 @@ char *arithmatoy_sub(unsigned int base, const char *lhs, const char *rhs) {
 	char *true_result = drop_leading_zeros(result);
 	true_result[strlen(result)] = '\0';
 	
+
 	//printf("result : %s\n", result);
 	
 	return true_result;
