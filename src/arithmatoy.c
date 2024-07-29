@@ -45,7 +45,7 @@ char *arithmatoy_add(unsigned int base, const char *lhs, const char *rhs) {
 	    tmp = 0;
 
 		if (VERBOSE){
-			fprintf(stderr, "sub: digit %c digit %c carry %d\n",  (len_lhs>counter ?rev_lhs[counter] : 0),  (len_rhs>counter ?rev_rhs[counter] : 0), carry);
+			fprintf(stderr, "add: digit %c digit %c carry %d\n",  (len_lhs>counter ?rev_lhs[counter] : 0),  (len_rhs>counter ?rev_rhs[counter] : 0), carry);
 		}
 
 		if (len_lhs>counter)
@@ -117,19 +117,24 @@ char *arithmatoy_sub(unsigned int base, const char *lhs, const char *rhs) {
 	//printf("reverse lhs : %s\n", rev_lhs);
 	//printf("reverse rhs : %s\n", rev_rhs);
 
-	if (len_lhs > len_rhs) {
-		max_len = len_lhs;
-		result = malloc(len_lhs+2); // 2 for '\0' and for a probable sign idk
-	} else if ((strcmp(rhs,lhs) == strcmp("0", rhs)) && (strlen(lhs) == strlen(rhs) == 1)){
+	// check si on a 0 - 0
+	if ((strcmp(rhs,lhs) == strcmp("0", rhs)) && (strlen(lhs) == strlen(rhs) == 1)){
 		
 		return "0";
-
-
+	
+	// si lhs est plus grand ou égal, alloue de l'espace mémoire
+	} else if (len_lhs >= len_rhs) {
+		max_len = len_lhs;
+		result = malloc(len_lhs+2); // 2 for '\0' and for a probable sign idk
+		
+	// check si la longueur de rhs supérieure à lhs
 	} else if (len_rhs > len_lhs) {
-		//max_len = len_rhs;
-		//result = malloc(len_lhs+2); // 2 for '\0' and for a probable sign idk
+		
 		return NULL;
-	} else if (strlen(lhs) == strlen(rhs)) {
+	}
+
+	// check si rhs > lhs lorsque leur longueur est égale
+	if (strlen(lhs) == strlen(rhs)) {
 
 		if(get_digit_value(lhs[0])<get_digit_value(rhs[0]))
 			return NULL;
@@ -139,8 +144,14 @@ char *arithmatoy_sub(unsigned int base, const char *lhs, const char *rhs) {
 	for (int counter = 0; counter < max_len; counter++ )
 	{
 	    tmp = 0;
+
+		if (VERBOSE){
+			fprintf(stderr, "sub: digit %c digit %c carry %d\n",  (len_lhs>counter ?rev_lhs[counter] : 0),  (len_rhs>counter ?rev_rhs[counter] : 0), carry);
+		}
+
 		if (len_lhs>counter)
 			tmp += get_digit_value(rev_lhs[counter]); //ajoute la lhs
+		
 			
 		if (len_rhs>counter)
 			tmp -= get_digit_value(rev_rhs[counter]); // sous trait la rhs
@@ -155,6 +166,10 @@ char *arithmatoy_sub(unsigned int base, const char *lhs, const char *rhs) {
 		{
 			tmp += base;
 			carry += 1;
+		}
+
+		if (VERBOSE){
+			fprintf(stderr, "sub: result: digit %d carry %d\n", tmp, carry);
 		}
 
 		result[counter] = to_digit(tmp);
