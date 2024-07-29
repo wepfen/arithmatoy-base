@@ -16,3 +16,5 @@ const char *drop_leading_zeros(const char *number);
 void debug_abort(const char *debug_msg);
 
 int get_max_len(int len_lhs, int len_rhs);
+
+int get_bigger_hs(char *lhs, char *rhs);

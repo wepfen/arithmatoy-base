@@ -123,12 +123,17 @@ char *arithmatoy_sub(unsigned int base, const char *lhs, const char *rhs) {
 	} else if ((strcmp(rhs,lhs) == strcmp("0", rhs)) && (strlen(lhs) == strlen(rhs) == 1)){
 		
 		return "0";
-		
+
 
 	} else if (len_rhs > len_lhs) {
 		//max_len = len_rhs;
 		//result = malloc(len_lhs+2); // 2 for '\0' and for a probable sign idk
 		return NULL;
+	} else if (strlen(lhs) == strlen(rhs)) {
+
+		if(get_digit_value(lhs[0])<get_digit_value(rhs[0]))
+			return NULL;
+
 	}
 		
 	for (int counter = 0; counter < max_len; counter++ )
