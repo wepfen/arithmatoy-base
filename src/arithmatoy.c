@@ -115,9 +115,6 @@ char *arithmatoy_sub(unsigned int base, const char *lhs, const char *rhs) {
 	char *rev_rhs = reverse(my_rhs);
 	char *rev_lhs = reverse(my_lhs);
 	int tmp = 0;
-	
-	//printf("lhs character : %s, rhs character : %s\n", lhs, rhs);
-	//printf("strlen lhs : %d\n", strlen(lhs));
 
 	// if maudit
 	if (strlen(lhs) == strlen(rhs)) {
@@ -182,17 +179,12 @@ char *arithmatoy_sub(unsigned int base, const char *lhs, const char *rhs) {
 		}
 
 		result[counter] = to_digit(tmp);
-		// teste si rev_lhs[i] == NULL, si oui ajouter 0, sinon ajouter sa get_digit value
-		// pareil avec rev_rhs
 	}
 
 	reverse(result);
 	result[max_len] = '\0';
 	char *true_result = drop_leading_zeros(result);
 	true_result[strlen(result)] = '\0';
-	
-
-	//printf("result : %s\n", result);
 	
 	return true_result;
 }
@@ -273,17 +265,3 @@ int get_max_len(int len_lhs, int len_rhs){
 		return len_rhs;
 	}
 }
-
-/*
-int main(void){
-	
-	printf("\n\n##### Base 10 : 10 - 5 #####\n");	
-	char* res = arithmatoy_sub(10, "10", "5");
-	printf("correct ? %d\n", atoi(res) == (10-5));	
-	printf("result : %s\n", res);
-
-	//arithmatoy_free(res);
-
-    return 0;
-}
-*/
