@@ -190,15 +190,58 @@ char *arithmatoy_sub(unsigned int base, const char *lhs, const char *rhs) {
 }
 
 char *arithmatoy_mul(unsigned int base, const char *lhs, const char *rhs) {
+
   if (VERBOSE) {
-    fprintf(stderr, "mul: entering function\n");
-  }
+		fprintf(stderr, "mul %s %s --verbose\n", lhs, rhs);
+		fprintf(stderr, "%s * %s\n", lhs, rhs);
+		fprintf(stderr, "mul: entering function\n");
+	}
 
-  // Fill the function, the goal is to compute lhs * rhs
-  // You should allocate a new cha#include <stddef.h>
+	size_t len_lhs = strlen(lhs);
+	size_t len_rhs = strlen(rhs);
+	size_t max_len = len_lhs + len_rhs;
+	int carry = 0;
+	char *result = (char *)malloc(max_len + 1);
+	result[max_len] = '\0';
 
-// Here are some utility functions that might be helpful to implement add, sub
-// and mul:
+	//placeholding du resultat par des '0'
+	for (size_t i = 0; i < max_len; i++) {
+		result[i] = '0';
+	}
+
+
+	for (size_t i = 0; i < len_lhs; i++) {
+		
+		
+		int lhs_digit = get_digit_value(lhs[len_lhs - i - 1]);
+
+		// pour chaque chiffre de lhs, par court chaque chiffre de rhs et multiplie puis additionne
+		for (size_t j = 0; j < len_rhs; j++) {
+			int rhs_digit = get_digit_value(rhs[len_rhs - j - 1]);
+			int product = lhs_digit * rhs_digit + carry + get_digit_value(result[i + j]);
+
+			carry = product / base;
+			result[i + j] = to_digit(product % base);
+		}
+
+		if (carry > 0) {
+		result[i + len_rhs] = to_digit(carry);
+		}
+
+		carry = 0;
+	}
+
+	reverse(result);
+
+	// pour pouvoir utiliser i après la boucle for
+	int i = 0;
+
+	for (; result[i] == '0' && result[i+1] != '\0'; i++){}
+
+	memmove(result, result+i, max_len);
+	
+	return result;
+  
 }
 
 
